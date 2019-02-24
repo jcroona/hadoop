@@ -78,6 +78,7 @@ import org.apache.hadoop.yarn.server.nodemanager.Context;
 import org.apache.hadoop.yarn.server.nodemanager.DeletionService;
 import org.apache.hadoop.yarn.server.nodemanager.NodeManager;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesAppEvent;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEventType;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.application.Application;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.application.ApplicationEvent;
@@ -943,8 +944,8 @@ public class TestContainer {
       
       for (final Map.Entry<String,ByteBuffer> e : wc.serviceData.entrySet()) {
         ArgumentMatcher<AuxServicesEvent> matchesServiceReq =
-            evt -> e.getKey().equals(evt.getServiceID())
-                && 0 == e.getValue().compareTo(evt.getServiceData());
+            evt -> (evt instanceof AuxServicesAppEvent) && e.getKey().equals(((AuxServicesAppEvent)evt).getServiceID())
+                && 0 == e.getValue().compareTo(((AuxServicesAppEvent)evt).getServiceData());
         verify(wc.auxBus).handle(argThat(matchesServiceReq));
       }
 

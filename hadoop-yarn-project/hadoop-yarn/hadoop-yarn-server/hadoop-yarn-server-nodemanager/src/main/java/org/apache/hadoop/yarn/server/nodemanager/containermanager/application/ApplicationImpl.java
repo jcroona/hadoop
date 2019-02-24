@@ -49,7 +49,7 @@ import org.apache.hadoop.yarn.proto.YarnServerNodemanagerRecoveryProtos.Containe
 import org.apache.hadoop.yarn.proto.YarnServerNodemanagerRecoveryProtos.FlowContextProto;
 import org.apache.hadoop.yarn.server.api.records.AppCollectorData;
 import org.apache.hadoop.yarn.server.nodemanager.Context;
-import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesAppEvent;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEventType;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.container.Container;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.container.ContainerInitEvent;
@@ -524,7 +524,7 @@ public class ApplicationImpl implements Application {
 
     // tell any auxiliary services that the app is done 
     this.dispatcher.getEventHandler().handle(
-        new AuxServicesEvent(AuxServicesEventType.APPLICATION_STOP, appId));
+        new AuxServicesAppEvent(AuxServicesEventType.APPLICATION_STOP, null, appId, null, null));
 
     // TODO: Trigger the LogsManager
   }

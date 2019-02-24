@@ -848,26 +848,30 @@ public class AuxServices extends AbstractService
 
   @Override
   public void handle(AuxServicesEvent event) {
+    AuxServicesAppEvent appEvent;
+    AuxServicesContainerEvent conEvent;
     LOG.info("Got event " + event.getType() + " for appId "
         + event.getApplicationID());
     switch (event.getType()) {
       case APPLICATION_INIT:
-        LOG.info("Got APPLICATION_INIT for service " + event.getServiceID());
+        appEvent = (AuxServicesAppEvent) event;
+        LOG.info("Got APPLICATION_INIT for service " + appEvent.getServiceID());
         AuxiliaryService service = null;
         try {
-          service = serviceMap.get(event.getServiceID());
+          service = serviceMap.get(appEvent.getServiceID());
           service
-              .initializeApplication(new ApplicationInitializationContext(event
-                  .getUser(), event.getApplicationID(), event.getServiceData()));
+              .initializeApplication(new ApplicationInitializationContext(appEvent
+                  .getUser(), appEvent.getApplicationID(), appEvent.getServiceData()));
         } catch (Throwable th) {
           logWarningWhenAuxServiceThrowExceptions(service,
               AuxServicesEventType.APPLICATION_INIT, th);
         }
         break;
       case APPLICATION_STOP:
+        appEvent = (AuxServicesAppEvent) event;
         for (AuxiliaryService serv : serviceMap.values()) {
           try {
-            serv.stopApplication(new ApplicationTerminationContext(event
+            serv.stopApplication(new ApplicationTerminationContext(appEvent
                 .getApplicationID()));
           } catch (Throwable th) {
             logWarningWhenAuxServiceThrowExceptions(serv,
@@ -876,12 +880,13 @@ public class AuxServices extends AbstractService
         }
         break;
       case CONTAINER_INIT:
+        conEvent = (AuxServicesContainerEvent) event;
         for (AuxiliaryService serv : serviceMap.values()) {
           try {
             serv.initializeContainer(new ContainerInitializationContext(
-                event.getContainer().getUser(),
-                event.getContainer().getContainerId(),
-                event.getContainer().getResource(), event.getContainer()
+              conEvent.getContainer().getUser(),
+              conEvent.getContainer().getContainerId(),
+              conEvent.getContainer().getResource(), conEvent.getContainer()
                 .getContainerTokenIdentifier().getContainerType()));
           } catch (Throwable th) {
             logWarningWhenAuxServiceThrowExceptions(serv,
@@ -890,11 +895,12 @@ public class AuxServices extends AbstractService
         }
         break;
       case CONTAINER_STOP:
+        conEvent = (AuxServicesContainerEvent) event;
         for (AuxiliaryService serv : serviceMap.values()) {
           try {
             serv.stopContainer(new ContainerTerminationContext(
-                event.getUser(), event.getContainer().getContainerId(),
-                event.getContainer().getResource(), event.getContainer()
+                null, conEvent.getContainer().getContainerId(),
+                conEvent.getContainer().getResource(), conEvent.getContainer()
                 .getContainerTokenIdentifier().getContainerType()));
           } catch (Throwable th) {
             logWarningWhenAuxServiceThrowExceptions(serv,

@@ -18,19 +18,39 @@
 
 package org.apache.hadoop.yarn.server.nodemanager.containermanager;
 
+import java.nio.ByteBuffer;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.event.AbstractEvent;
 
 
-public class AuxServicesEvent extends AbstractEvent<AuxServicesEventType> {
-  private final ApplicationId appId;
-  public AuxServicesEvent(AuxServicesEventType event, ApplicationId appId) {
-    super(event);
-    this.appId = appId;
-  }
-  public ApplicationId getApplicationID() {
-    return appId;
+public class AuxServicesAppEvent extends AuxServicesEvent{
+
+  private final String user;
+  private final String serviceId;
+  private final ByteBuffer serviceData;
+
+
+
+  public AuxServicesAppEvent(AuxServicesEventType eventType, String user,
+      ApplicationId appId, String serviceId, ByteBuffer serviceData) {
+    super(eventType, appId);
+    this.user = user;
+    this.serviceId = serviceId;
+    this.serviceData = serviceData;
   }
 
+  public String getServiceID() {
+    return serviceId;
+  }
+
+  public ByteBuffer getServiceData() {
+    return serviceData;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  
 
 }

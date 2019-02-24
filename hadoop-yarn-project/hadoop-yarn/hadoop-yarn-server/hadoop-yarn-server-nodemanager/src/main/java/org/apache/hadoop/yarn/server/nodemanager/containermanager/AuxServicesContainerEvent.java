@@ -19,18 +19,29 @@
 package org.apache.hadoop.yarn.server.nodemanager.containermanager;
 
 import org.apache.hadoop.yarn.api.records.ApplicationId;
+import org.apache.hadoop.yarn.api.records.ContainerId;
 import org.apache.hadoop.yarn.event.AbstractEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.container
+    .Container;
 
 
-public class AuxServicesEvent extends AbstractEvent<AuxServicesEventType> {
-  private final ApplicationId appId;
-  public AuxServicesEvent(AuxServicesEventType event, ApplicationId appId) {
-    super(event);
-    this.appId = appId;
+public class AuxServicesContainerEvent extends AuxServicesEvent {
+
+
+  private final Container container;
+
+  
+
+  public AuxServicesContainerEvent(AuxServicesEventType eventType, Container container) {
+    super(eventType, container.getContainerId().getApplicationAttemptId().getApplicationId());
+    this.container = container;
+
   }
-  public ApplicationId getApplicationID() {
-    return appId;
-  }
 
+  
+
+  public Container getContainer() {
+    return container;
+  }
 
 }

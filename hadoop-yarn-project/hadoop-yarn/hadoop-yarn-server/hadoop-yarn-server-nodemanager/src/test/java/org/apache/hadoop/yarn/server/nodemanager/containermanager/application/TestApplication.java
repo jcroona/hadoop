@@ -44,6 +44,7 @@ import org.apache.hadoop.yarn.server.api.records.MasterKey;
 import org.apache.hadoop.yarn.server.api.records.impl.pb.MasterKeyPBImpl;
 import org.apache.hadoop.yarn.server.nodemanager.Context;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesAppEvent;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEventType;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.container.Container;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.container.ContainerEvent;
@@ -265,8 +266,8 @@ public class TestApplication {
               wa.app), "timestamp"));
 
       verify(wa.auxBus).handle(
-          refEq(new AuxServicesEvent(
-              AuxServicesEventType.APPLICATION_STOP, wa.appId)));
+          refEq(new AuxServicesAppEvent(
+              AuxServicesEventType.APPLICATION_STOP, null, wa.appId, null, null)));
 
       wa.appResourcesCleanedup();
       for (Container container : wa.containers) {

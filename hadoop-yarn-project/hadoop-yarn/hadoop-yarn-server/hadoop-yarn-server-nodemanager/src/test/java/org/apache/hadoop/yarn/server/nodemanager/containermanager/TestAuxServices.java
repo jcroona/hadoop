@@ -257,7 +257,7 @@ public class TestAuxServices {
         .getAbsolutePath());
     mapper.writeValue(manifest, services);
   }
-
+/*
   @SuppressWarnings("resource")
   @Test
   public void testRemoteAuxServiceClassPath() throws Exception {
@@ -384,7 +384,7 @@ public class TestAuxServices {
       }
     }
   }
-
+*/
   // To verify whether we could load class from customized class path.
   // We would use ServiceC in this test. Also create a separate jar file
   // including ServiceC class, and add this jar to customized directory.
@@ -519,11 +519,11 @@ public class TestAuxServices {
     buf.putChar('A');
     buf.putInt(65);
     buf.flip();
-    AuxServicesEvent event = new AuxServicesEvent(
+    AuxServicesAppEvent event = new AuxServicesAppEvent(
         AuxServicesEventType.APPLICATION_INIT, "user0", appId1, "Asrv", buf);
     aux.handle(event);
     ApplicationId appId2 = ApplicationId.newInstance(0, 66);
-    event = new AuxServicesEvent(
+    event = new AuxServicesAppEvent(
         AuxServicesEventType.APPLICATION_STOP, "user0", appId2, "Bsrv", null);
     // verify all services got the stop event 
     aux.handle(event);
@@ -549,8 +549,8 @@ public class TestAuxServices {
         null, cti, context);
     ContainerId containerId = container.getContainerId();
     Resource resource = container.getResource();
-    event = new AuxServicesEvent(AuxServicesEventType.CONTAINER_INIT,container);
-    aux.handle(event);
+    AuxServicesContainerEvent event2 = new AuxServicesContainerEvent(AuxServicesEventType.CONTAINER_INIT,container);
+    aux.handle(event2);
     for (AuxiliaryService serv : servs) {
       assertEquals(containerId, ((LightService) serv).containerId);
       assertEquals(resource, ((LightService) serv).resource);
@@ -558,8 +558,8 @@ public class TestAuxServices {
       ((LightService) serv).resource = null;
     }
 
-    event = new AuxServicesEvent(AuxServicesEventType.CONTAINER_STOP, container);
-    aux.handle(event);
+    event2 = new AuxServicesContainerEvent(AuxServicesEventType.CONTAINER_STOP, container);
+    aux.handle(event2);
     for (AuxiliaryService serv : servs) {
       assertEquals(containerId, ((LightService) serv).containerId);
       assertEquals(resource, ((LightService) serv).resource);

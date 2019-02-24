@@ -64,7 +64,8 @@ import org.apache.hadoop.yarn.server.nodemanager.ContainerExecutor.ExitCode;
 import org.apache.hadoop.yarn.server.nodemanager.Context;
 import org.apache.hadoop.yarn.server.nodemanager.NMAuditLogger;
 import org.apache.hadoop.yarn.server.nodemanager.NMAuditLogger.AuditConstants;
-import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesAppEvent;
+import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesContainerEvent;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.AuxServicesEventType;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.application.ApplicationContainerFinishedEvent;
 import org.apache.hadoop.yarn.server.nodemanager.containermanager.launcher.ContainersLauncherEvent;
@@ -1190,7 +1191,7 @@ public class ContainerImpl implements Container {
       final ContainerLaunchContext ctxt = container.launchContext;
       container.metrics.initingContainer();
 
-      container.dispatcher.getEventHandler().handle(new AuxServicesEvent
+      container.dispatcher.getEventHandler().handle(new AuxServicesContainerEvent
           (AuxServicesEventType.CONTAINER_INIT, container));
 
       // Inform the AuxServices about the opaque serviceData
@@ -1200,7 +1201,7 @@ public class ContainerImpl implements Container {
         // have distinct service data
         for (Map.Entry<String,ByteBuffer> service : csd.entrySet()) {
           container.dispatcher.getEventHandler().handle(
-              new AuxServicesEvent(AuxServicesEventType.APPLICATION_INIT,
+              new AuxServicesAppEvent(AuxServicesEventType.APPLICATION_INIT,
                   container.user, container.containerId
                       .getApplicationAttemptId().getApplicationId(),
                   service.getKey().toString(), service.getValue()));
@@ -1911,7 +1912,7 @@ public class ContainerImpl implements Container {
       // sent for the event, thus no need to send the CONTAINER_STOP
       if (container.getCurrentState()
           != org.apache.hadoop.yarn.api.records.ContainerState.NEW) {
-        container.dispatcher.getEventHandler().handle(new AuxServicesEvent
+        container.dispatcher.getEventHandler().handle(new AuxServicesContainerEvent
             (AuxServicesEventType.CONTAINER_STOP, container));
       }
       container.context.getNodeStatusUpdater().sendOutofBandHeartBeat();
