@@ -257,7 +257,7 @@ public class TestAuxServices {
         .getAbsolutePath());
     mapper.writeValue(manifest, services);
   }
-/*
+
   @SuppressWarnings("resource")
   @Test
   public void testRemoteAuxServiceClassPath() throws Exception {
@@ -384,7 +384,7 @@ public class TestAuxServices {
       }
     }
   }
-*/
+
   // To verify whether we could load class from customized class path.
   // We would use ServiceC in this test. Also create a separate jar file
   // including ServiceC class, and add this jar to customized directory.
